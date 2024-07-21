@@ -1,6 +1,18 @@
+from debugpy import connect
 import torch
 from flask import Flask, request, jsonify
 from modules import *
+import firebase_admin
+from firebase_admin import db, credentials
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+cred = credentials.Certificate('credentials.json')
+firebase_admin.initialize_app(cred, {'databaseURL': DATABASE_URL})
+ref = db.reference('/')
 
 app = Flask(__name__)
 
@@ -13,13 +25,12 @@ def predict_():
     if 'image' not in request.json:
         return jsonify({'error': 'No image provided'}), 400
 
-    base64_image = request.json['image']
-    print(base64_image)
+    base64_string = request.json['image']
     try:
-        predicted_class = predict(base64_image)
-
+        predicted_class = predict(base64_string)
+        payload = create_payload_for_db(base64_string, predicted_class)
+        ref.push(payload)
         return jsonify({'prediction': predicted_class})
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
