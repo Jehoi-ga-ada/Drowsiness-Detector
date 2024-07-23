@@ -2,7 +2,6 @@ runs
 __pycache__
 images
 **/**.jpg
-yolo.ipynb
 .env
 model_testing.ipynb
 modules_testing.ipynb
