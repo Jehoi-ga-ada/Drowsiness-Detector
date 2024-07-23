@@ -7,14 +7,15 @@ from time import time
 import base64
 
 def load_model():
-    model = YOLO("models/rbf3.pt")
+    model = YOLO("models/YOLOv8 - 20 - Epochs.pt")
     return model
 
 def predict(base64_string):
     model = load_model()
     input_image = preprocess_base64_image(base64_string)
     results = model.predict(source=input_image,
-                        save=True)
+                        save=False,
+                        verbose=False)
     names = model.names
     try:
         predicted_class = names[results[0].probs.top1]
