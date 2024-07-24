@@ -28,7 +28,9 @@ def predict_():
     base64_string = request.json['image']
     try:
         predicted_class = predict(base64_string)
-        payload = create_payload_for_db(base64_string, predicted_class)
+        img = preprocess_base64_image(base64_string)
+        base64_load = encode_image_to_base64(img)
+        payload = create_payload_for_db(base64_load, predicted_class)
         ref.push(payload)
         return jsonify({'prediction': predicted_class})
     except Exception as e:
