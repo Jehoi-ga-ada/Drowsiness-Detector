@@ -30,7 +30,7 @@ def preprocess_base64_image(base64_string):
     """
     image_data = base64.b64decode(base64_string)
     image = Image.open(io.BytesIO(image_data))
-    return image
+    return image.rotate(90, expand=True)
 
 def encode_image_to_base64(image_path):
     """
